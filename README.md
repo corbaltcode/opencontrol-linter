@@ -1,3 +1,6 @@
+[![CircleCI](https://circleci.com/gh/huge-robot/opencontrol-linter.svg?style=svg&circle-token=7873c3440387ef3e3b04964f5c51a15f7e3f26de)](https://circleci.com/gh/huge-robot/opencontrol-linter)
+
+
 **Open Control Linter** is a linter for the OpenControl standard of security controls. 
 Use it to check the correctness of opencontrols components, standards and certifications quickly.
 
