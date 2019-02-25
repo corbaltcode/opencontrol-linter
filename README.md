@@ -1,4 +1,8 @@
-**Open Control Linter** is a linter for the OpenControl standard of security controls automation.
+**Open Control Linter** is a linter for the OpenControl standard of security controls. 
+Use it to check the correctness of opencontrols components, standards and certifications quickly.
+
+To find out more about opencontrol see:
+http://opencontrol.cfapps.io/
 
 ## Installation
 
@@ -21,9 +25,50 @@ $ cd awesome/opencontrols/
 $ opencontrol-linter
 ```
 
-## Official manual
+## Documentation
 
-You can read a ton more about Open Control Linter in its [official manual](https://docs.Open Control Linter.org).
+Detailed command line arguments
+
+```
+ usage: opencontrol-linter
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    -c, --components
+                          Specify component files should be checked. Defaults to
+                          true. Searches ./**/component.yaml or the search you
+                          optionally specify.
+    -n, --certifications
+                          Specify certification (eg FISMA high)files should be
+                          checked. Defaults to true. Searches
+                          ./certifications/*.yaml or the search you optionally
+                          specify.
+    -s, --standards
+                          Specify standard files (eg NIST 800.53) should be
+                          checked. Defaults to true. Searches ./standards/*.yaml
+                          or the search you optionally specify.
+    -a, --all             Run all types of validations (this is the default).
+    -v, --version         Show the version of this utility.
+
+      
+```
+
+Usage examples
+
+```
+# lint all components, standards and certifications in the current directory
+opencontrol-linter
+
+# lint all components subdir components
+opencontrol-linter --components './components/**/component.yaml'
+
+# lint all standards files found
+opencontrol-linter --standards
+
+# lint one component
+opencontrol-linter --components './components/AU_policy/component.yaml'
+
+```
 
 ## Compatibility
 
@@ -33,9 +78,13 @@ Open Control Linter supports the following Open Control schemas:
 - Standard: (all v1.0 through v1.0)
 - Certification: (all v1.0 through v1.0)
 
+## Related
+http://opencontrol.cfapps.io/
+https://github.com/opencontrol
 
 ## Team
 
 Here's a list of Open Control Linter's core developers:
 
 * [Adrian Kierman](https://github.com/adriankierman)
+* James Connor
