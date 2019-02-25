@@ -9,7 +9,6 @@ require 'pp'
 module Opencontrol
   # This module holds the Opencontrol Linter Command Line Interface.
   module Linter
-
     # @param [String] version
     def self.find_schema(type, version)
       dir = __dir__
@@ -52,14 +51,6 @@ module Opencontrol
       load_schema(schema_file)
     end
 
-    def self.targets_for_type(type, specification)
-      specification[:targets].select { |t| t[:type] == type }
-    end
-
-    def self.default_pattern_for_type(type)
-      targets_for_type(type, DEFAULT_SPECIFICATION).first[:pattern]
-    end
-
     def self.validate(type, filename)
       ## load document
       # document = Kwalify::Yaml.load_file(filename)
@@ -73,12 +64,12 @@ module Opencontrol
 
     def self.files_not_found_issue
       Kwalify::BaseError.new(
-          'No validation files found for the pattern supplied. \
-         Adding an issue to avoid failing silently.',
-          nil,
-          nil,
-          nil,
-          :linter_files_not_found_issue
+        'No validation files found for the pattern supplied. \
+       Adding an issue to avoid failing silently.',
+        nil,
+        nil,
+        nil,
+        :linter_files_not_found_issue
       )
     end
 

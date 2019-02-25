@@ -65,20 +65,20 @@ USAGE_TEXT
           pattern: './certifications/*.yaml'
         },
         {
-            type: :opencontrols,
-            pattern: './opencontrol.yaml'
+          type: :opencontrols,
+          pattern: './opencontrol.yaml'
         }
       ]
     }.freeze
 
     ALIASES = {
-        components: %w[component c],
-        standards: %w[standard s],
-        certifications: %w[certification n],
-        opencontrols: %w[opencontrol o],
-        all: 'a',
-        help: 'h',
-        version: 'v'
+      components: %w[component c],
+      standards: %w[standard s],
+      certifications: %w[certification n],
+      opencontrols: %w[opencontrol o],
+      all: 'a',
+      help: 'h',
+      version: 'v'
     }.freeze
 
     def self.show_help
@@ -140,9 +140,16 @@ USAGE_TEXT
 
     def self.run_with_args(args)
       specification = parse_args(args)
-      exit(Opencontrol::Linter.run(specification)) if specification[:action] == :run
-      show_version                                 if specification[:action] == :version
-      show_help                                    if specification[:action] == :help
+      result = 0
+      case specification[:action]
+      when :run
+        result = Opencontrol::Linter.run(specification)
+      when :version
+        result = show_version
+      when :help
+        result = show_help
+      end
+      exit(result)
     end
   end
 end

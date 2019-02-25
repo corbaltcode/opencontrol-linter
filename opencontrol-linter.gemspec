@@ -47,8 +47,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rack', '>= 2.0')
   s.add_development_dependency('rake', '~> 12.3.2')
   s.add_development_dependency('rspec', '~> 3.8.0')
+  s.add_development_dependency('rspec_junit_formatter', '~> 0.4.1')
   s.add_development_dependency('rubocop-rspec', '~> 1.29.0')
   s.add_development_dependency('simplecov', '~> 0.16.1')
-  s.add_development_dependency('rspec_junit_formatter', '~> 0.4.1')
 end
 # opencontrol:enable Metrics/BlockLength

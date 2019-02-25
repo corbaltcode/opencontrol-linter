@@ -5,6 +5,4 @@
 require 'simplecov' if ENV['COVERAGE']
 require 'rake'
 
-
 Dir['tasks/**/*.rake'].each { |t| load t }
-

@@ -22,7 +22,6 @@ SPEC = {
 }.freeze
 
 RSpec.describe 'Opencontrol CLI' do
-
   context 'when checking basic output' do
     it 'outputs a correct help string' do
       expect { Opencontrol::CLI.run_with_args(['--help']) }.to output(/usage: opencontrol-linter/).to_stdout
@@ -108,5 +107,4 @@ RSpec.describe 'Opencontrol CLI' do
       end
     end
   end
-
 end

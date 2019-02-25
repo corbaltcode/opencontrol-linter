@@ -3,9 +3,9 @@ begin
 
   RSpec::Core::RakeTask.new(:spec)
 
-  task :default => :spec
+  task default: :spec
 rescue LoadError
-   warn e.message
-   warn 'Run `bundle install` to install missing gems'
-   exit e.status_code
+  warn e.message
+  warn 'Run `bundle install` to install missing gems'
+  exit e.status_code
 end
