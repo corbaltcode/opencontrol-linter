@@ -8,24 +8,33 @@ RSpec.describe 'Opencontrol Linter' do
     it 'returns 0 for valid components file' do
       specifications = [{
         action: :run,
-        targets: [{ type: :components,
-                    pattern: './spec/fixtures/no_issues/components/AU_policy/component.yaml' }]
+        targets: [
+          { type: :components,
+            pattern:
+               './spec/fixtures/no_issues/components/AU_policy/component.yaml' }
+        ]
       }]
       specifications.each do |specification|
         expect(Opencontrol::Linter.run(specification)).to eq(0)
-        expect { Opencontrol::Linter.run(specification) }.to output(/Complete. No problems found./).to_stdout
+        expect do
+          Opencontrol::Linter.run(specification)
+        end.to output(/Complete. No problems found./).to_stdout
       end
     end
 
     it 'returns 0 for valid standards file' do
       specifications = [{
         action: :run,
-        targets: [{ type: :standards,
-                    pattern: './spec/fixtures/no_issues/standards/FRIST-800-53.yaml' }]
+        targets: [
+          { type: :standards,
+            pattern: './spec/fixtures/no_issues/standards/FRIST-800-53.yaml' }
+        ]
       }]
       specifications.each do |specification|
         expect(Opencontrol::Linter.run(specification)).to eq(0)
-        expect { Opencontrol::Linter.run(specification) }.to output(/Complete. No problems found./).to_stdout
+        expect do
+          Opencontrol::Linter.run(specification)
+        end.to output(/Complete. No problems found./).to_stdout
       end
     end
 
@@ -37,7 +46,9 @@ RSpec.describe 'Opencontrol Linter' do
       }]
       specifications.each do |specification|
         expect(Opencontrol::Linter.run(specification)).to eq(0)
-        expect { Opencontrol::Linter.run(specification) }.to output(/Complete. No problems found./).to_stdout
+        expect do
+          Opencontrol::Linter.run(specification)
+        end.to output(/Complete. No problems found./).to_stdout
       end
     end
 
@@ -49,7 +60,9 @@ RSpec.describe 'Opencontrol Linter' do
       }]
       specifications.each do |specification|
         expect(Opencontrol::Linter.run(specification)).to eq(0)
-        expect { Opencontrol::Linter.run(specification) }.to output(/Complete. No problems found./).to_stdout
+        expect do
+          Opencontrol::Linter.run(specification)
+        end.to output(/Complete. No problems found./).to_stdout
       end
     end
   end
@@ -62,7 +75,9 @@ RSpec.describe 'Opencontrol Linter' do
                     pattern: './spec/fixtures/issues/components/AU_policy/component.yaml' }]
       }
       expect(Opencontrol::Linter.run(specification)).to eq(1)
-      expect { Opencontrol::Linter.run(specification) }.to output(/Complete. 1 issues found./).to_stdout
+      expect do
+        Opencontrol::Linter.run(specification)
+      end.to output(/Complete. 1 issues found./).to_stdout
     end
     it 'checks a given file with faults and returns 1 for standards file' do
       specification = {
@@ -71,16 +86,20 @@ RSpec.describe 'Opencontrol Linter' do
                     pattern: './spec/fixtures/issues/standards/FRIST-800-53.yaml' }]
       }
       expect(Opencontrol::Linter.run(specification)).to eq(1)
-      expect { Opencontrol::Linter.run(specification) }.to output(/Complete. 1 issues found./).to_stdout
+      expect do
+        Opencontrol::Linter.run(specification)
+      end.to output(/Complete. 1 issues found./).to_stdout
     end
-    it 'checks a given file with faults and returns 1 for certifications file' do
+    it 'checks a given file with faults and returns 1 for certifications' do
       specification = {
         action: :run,
         targets: [{ type: :certifications,
                     pattern: './spec/fixtures/issues/certifications/FredRAMP-low.yaml' }]
       }
       expect(Opencontrol::Linter.run(specification)).to eq(1)
-      expect { Opencontrol::Linter.run(specification) }.to output(/Complete. 1 issues found./).to_stdout
+      expect do
+        Opencontrol::Linter.run(specification)
+      end.to output(/Complete. 1 issues found./).to_stdout
     end
     it 'checks a given file with faults and returns 1 for opencontrol file' do
       specification = {
@@ -89,7 +108,9 @@ RSpec.describe 'Opencontrol Linter' do
                     pattern: './spec/fixtures/issues/opencontrol.yaml' }]
       }
       expect(Opencontrol::Linter.run(specification)).to eq(1)
-      expect { Opencontrol::Linter.run(specification) }.to output(/Complete. 1 issues found./).to_stdout
+      expect do
+        Opencontrol::Linter.run(specification)
+      end.to output(/Complete. 1 issues found./).to_stdout
     end
   end
 
@@ -101,7 +122,9 @@ RSpec.describe 'Opencontrol Linter' do
                     pattern: './spec/fixtures/empty/**/component.yaml' }]
       }
       expect(Opencontrol::Linter.run(specification)).to eq(1)
-      expect { Opencontrol::Linter.run(specification) }.to output(/Complete. 1 issues found./).to_stdout
+      expect do
+        Opencontrol::Linter.run(specification)
+      end.to output(/Complete. 1 issues found./).to_stdout
     end
     it 'should emit a warning when bad yaml is supplied\
          (ie before a schema check)' do
@@ -111,12 +134,14 @@ RSpec.describe 'Opencontrol Linter' do
                     pattern: './spec/fixtures/bad_yaml/component_of_bad.yaml' }]
       }
       expect(Opencontrol::Linter.run(specification)).to eq(3)
-      expect { Opencontrol::Linter.run(specification) }.to output(/Complete. 3 issues found./).to_stdout
+      expect do
+        Opencontrol::Linter.run(specification)
+      end.to output(/Complete. 3 issues found./).to_stdout
     end
-    it 'should emit a message and stop when no schema is found for the supplied job' do
+    it 'should emit a message and stop when no schema is found for the job' do
       skip
     end
-    it 'should throw and stop when an unknown type of component schema is used in the spec' do
+    it 'should throw when an unknown type of schema is used in the spec' do
       skip
     end
   end

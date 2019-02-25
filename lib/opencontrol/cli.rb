@@ -10,43 +10,43 @@ module Opencontrol
   # This module holds the Opencontrol Linter Command Line Interface.
   module CLI
     USAGE_TEXT = <<USAGE_TEXT.freeze
-      usage: opencontrol-linter
+    usage: opencontrol-linter
 
-      optional arguments:
-        -h, --help            show this help message and exit
-        -c, --components
-                              Specify component files should be checked. Defaults to
-                              true. Searches ./**/component.yaml or the search you
-                              optionally specify.
-        -n, --certifications
-                              Specify certification (eg FISMA high)files should be
-                              checked. Defaults to true. Searches
-                              ./certifications/*.yaml or the search you optionally
-                              specify.
-        -s, --standards
-                              Specify standard files (eg NIST 800.53) should be
-                              checked. Defaults to true. Searches ./standards/*.yaml
-                              or the search you optionally specify.
-        -o, --opencontrols, --opencontrol
-                              Specify opencontrol file or files should be
-                              checked. Defaults to true. Searches ./opencontrol.yaml
-                              or the search you optionally specify.
-        -a, --all             Run all types of validations (this is the default).
-        -v, --version         Show the version of this utility.
+    optional arguments:
+      -h, --help            show this help message and exit
+      -c, --components
+                            Specify component files should be checked. Defaults to
+                            true. Searches ./**/component.yaml or the search you
+                            optionally specify.
+      -n, --certifications
+                            Specify certification (eg FISMA high)files should be
+                            checked. Defaults to true. Searches
+                            ./certifications/*.yaml or the search you optionally
+                            specify.
+      -s, --standards
+                            Specify standard files (eg NIST 800.53) should be
+                            checked. Defaults to true. Searches ./standards/*.yaml
+                            or the search you optionally specify.
+      -o, --opencontrols, --opencontrol
+                            Specify opencontrol file or files should be
+                            checked. Defaults to true. Searches ./opencontrol.yaml
+                            or the search you optionally specify.
+      -a, --all             Run all types of validations (this is the default).
+      -v, --version         Show the version of this utility.
 
-      Usage examples:
+    Usage examples:
 
-          # lint all components, standards and certifications in the current directory
-           opencontrol-linter
+        # lint all components, standards and certifications in the current directory
+         opencontrol-linter
 
-          # lint all components subdir components
-           opencontrol-linter --components './components/**/component.yaml'
+        # lint all components subdir components
+         opencontrol-linter --components './components/**/component.yaml'
 
-          # lint all standards files found
-           opencontrol-linter --standards
+        # lint all standards files found
+         opencontrol-linter --standards
 
-          # lint one component
-           opencontrol-linter --components './components/AU_policy/component.yaml'
+        # lint one component
+         opencontrol-linter --components './components/AU_policy/component.yaml'
 USAGE_TEXT
 
     DEFAULT_SPECIFICATION = {

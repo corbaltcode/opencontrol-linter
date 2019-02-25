@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.authors = ['Adrian Kierman', 'James Connor']
   s.description = <<-DESCRIPTION
     Automatic Open Control schema checking tool.
-    Aims to provide quick tests that ensure open control controls work together reliably.
+    Aims to provide quick tests that ensure controls work together reliably.
   DESCRIPTION
 
   # If you need to check in files that aren't .rb files, add them here
