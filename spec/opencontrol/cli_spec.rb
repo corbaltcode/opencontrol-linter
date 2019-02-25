@@ -27,7 +27,7 @@ RSpec.describe 'Opencontrol Linter' do
       specifications = [{
         action: :run,
         targets: [{ type: :components,
-                    pattern: './spec/fixtures/no_issues/components/component.yaml' }]
+                    pattern: './spec/fixtures/no_issues/components/AU_policy/component.yaml' }]
       }]
       specifications.each  do |specification|
         expect(Opencontrol::CLI.run(specification)).to eq(0)
@@ -58,6 +58,18 @@ RSpec.describe 'Opencontrol Linter' do
         expect { Opencontrol::CLI.run(specification) }.to output(/Complete. No problems found./).to_stdout
       end
     end
+
+    it 'returns 0 for valid opencontrol file' do
+      specifications = [{
+                            action: :run,
+                            targets: [{ type: :opencontrols,
+                                        pattern: './spec/fixtures/no_issues/opencontrol.yaml' }]
+                        }]
+      specifications.each  do |specification|
+        expect(Opencontrol::CLI.run(specification)).to eq(0)
+        expect { Opencontrol::CLI.run(specification) }.to output(/Complete. No problems found./).to_stdout
+      end
+    end
   end
 
   context 'when checking an incorrect file' do
@@ -65,7 +77,7 @@ RSpec.describe 'Opencontrol Linter' do
       specification = {
         action: :run,
         targets: [{ type: :components,
-                    pattern: './spec/fixtures/issues/components/component.yaml' }]
+                    pattern: './spec/fixtures/issues/components/AU_policy/component.yaml' }]
       }
       expect(Opencontrol::CLI.run(specification)).to eq(1)
       expect { Opencontrol::CLI.run(specification) }.to output(/Complete. 1 issues found./).to_stdout
@@ -84,6 +96,15 @@ RSpec.describe 'Opencontrol Linter' do
           action: :run,
           targets: [{ type: :certifications,
                       pattern: './spec/fixtures/issues/certifications/FredRAMP-low.yaml' }]
+      }
+      expect(Opencontrol::CLI.run(specification)).to eq(1)
+      expect { Opencontrol::CLI.run(specification) }.to output(/Complete. 1 issues found./).to_stdout
+    end
+    it 'checks a given file with faults and returns 1 for opencontrol file' do
+      specification = {
+          action: :run,
+          targets: [{ type: :opencontrols,
+                      pattern: './spec/fixtures/issues/opencontrol.yaml' }]
       }
       expect(Opencontrol::CLI.run(specification)).to eq(1)
       expect { Opencontrol::CLI.run(specification) }.to output(/Complete. 1 issues found./).to_stdout
@@ -116,7 +137,7 @@ RSpec.describe 'Opencontrol Linter' do
       [['--all'], ['-a'], ['']].each do |a|
         s = Opencontrol::CLI.parse_args(a)
         expect(s[:action]).to eq(:run)
-        expect(s[:targets].length).to eq(3)
+        expect(s[:targets].length).to eq(4)
         expect(s).to eq(Opencontrol::CLI::DEFAULT_SPECIFICATION)
       end
     end
@@ -145,7 +166,7 @@ RSpec.describe 'Opencontrol Linter' do
       end
     end
     it 'it allows a custom target file for components' do
-      f = './spec/fixtures/no_issues/components/component.yaml'
+      f = './spec/fixtures/no_issues/components/AU_policy/component.yaml'
       [['--component', f]].each do |a|
         s = Opencontrol::CLI.parse_args(a)
         expect(s[:action]).to eq(:run)

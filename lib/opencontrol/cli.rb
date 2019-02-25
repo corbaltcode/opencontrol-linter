@@ -28,6 +28,10 @@ module Opencontrol
                               Specify standard files (eg NIST 800.53) should be
                               checked. Defaults to true. Searches ./standards/*.yaml
                               or the search you optionally specify.
+        -o, --opencontrols, --opencontrol
+                              Specify opencontrol file or files should be
+                              checked. Defaults to true. Searches ./opencontrol.yaml
+                              or the search you optionally specify.
         -a, --all             Run all types of validations (this is the default).
         -v, --version         Show the version of this utility.
 
@@ -51,7 +55,7 @@ USAGE_TEXT
       targets: [
         {
           type: :components,
-          pattern: '**/component.yaml'
+          pattern: './components/**/component.yaml'
         },
         {
           type: :standards,
@@ -60,6 +64,10 @@ USAGE_TEXT
         {
           type: :certifications,
           pattern: './certifications/*.yaml'
+        },
+        {
+            type: :opencontrols,
+            pattern: './opencontrol.yaml'
         }
       ]
     }.freeze
@@ -85,6 +93,8 @@ USAGE_TEXT
         "#{dir}/../../vendor/schemas/kwalify/standard/v#{version}.yaml"
       when :certifications
         "#{dir}/../../vendor/schemas/kwalify/certification/v#{version}.yaml"
+      when :opencontrols
+        "#{dir}/../../vendor/schemas/kwalify/opencontrol/v#{version}.yaml"
       else
         throw "Unknown type of schema specified #{type} " \
     "tried to get schema version #{version}"
@@ -191,6 +201,7 @@ USAGE_TEXT
       components: %w[component c],
       standards: %w[standard s],
       certifications: %w[certification n],
+      opencontrols: %w[opencontrol o],
       all: 'a',
       help: 'h',
       version: 'v'
@@ -207,6 +218,7 @@ USAGE_TEXT
       add_target(:components, opts, specification)     if opts[:components]
       add_target(:standards, opts, specification)      if opts[:standards]
       add_target(:certifications, opts, specification) if opts[:certifications]
+      add_target(:opencontrols, opts, specification)   if opts[:opencontrols]
       specification = DEFAULT_SPECIFICATION if use_default?(opts, specification)
       specification
     end
