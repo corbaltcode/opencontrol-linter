@@ -7,7 +7,6 @@ metadata:
 components:
   - ./components/AU_policy
   - ./components/AWS_core
-  - ./components/AWS_implementation
 standards:
   - ./standards/FRIST-800-53.yaml
 certifications:

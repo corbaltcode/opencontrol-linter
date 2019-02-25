@@ -130,7 +130,9 @@ Open Control Linter supports the following Open Control schemas:
 - Certification: (all v1.0 through v1.0)
 
 ## Related
+
 http://opencontrol.cfapps.io/
+
 https://github.com/opencontrol
 
 ## Team

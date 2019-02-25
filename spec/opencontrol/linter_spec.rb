@@ -145,4 +145,9 @@ RSpec.describe 'Opencontrol Linter' do
       skip
     end
   end
+  context 'validating opencontrol files' do
+    it 'should indicate when there are broken links in the opencontrol file' do
+      skip
+    end
+  end
 end

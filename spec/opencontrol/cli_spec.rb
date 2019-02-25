@@ -117,4 +117,10 @@ RSpec.describe 'Opencontrol CLI' do
       end
     end
   end
+
+  context 'when parsing command line arguments for custom search' do
+    it 'takes search paths from the opencontrol file if one is available' do
+      skip
+    end
+  end
 end

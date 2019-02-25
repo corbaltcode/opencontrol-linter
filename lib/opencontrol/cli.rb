@@ -96,18 +96,67 @@ USAGE_TEXT
       specification[:targets].select { |t| t[:type] == type }
     end
 
+    def self.default_targets_for_type(type)
+      targets_for_type(type, DEFAULT_SPECIFICATION)
+    end
+
     def self.default_pattern_for_type(type)
       targets_for_type(type, DEFAULT_SPECIFICATION).first[:pattern]
     end
 
     def self.add_target(type, opts, specification)
-      # pick a reasonable default
-      use_defaults = false
-      use_defaults = default_pattern_for_type(type) if opts[type] == true
-      specification[:targets].push(
-        type: type,
-        pattern: use_defaults || opts[type]
-      )
+      if opts[type] == true
+        # use the defaults supplied
+        puts "Adding target for #{type} via constructed defaults"
+        targets_for_type(type, construct_default_spec).each do |target|
+          specification[:targets].push target
+        end
+      else
+        puts "Adding target for #{type} via preconfigured defaults"
+        if opts[type].is_a?(String)
+          specification[:targets].push(
+              type: type,
+              pattern: opts[type]
+          )
+        end
+      end
+    end
+
+    def self.construct_default_spec
+      targets = []
+      if File.exists?('./opencontrol.yaml')
+        puts "Using search paths from './opencontrol.yaml"
+        opencontrol_yaml_hash = YAML.load_file('./opencontrol.yaml')
+        puts(opencontrol_yaml_hash)
+        [:components, :standards, :certifications].each do |type|
+          puts "Opencontrol.yaml contained #{opencontrol_yaml_hash[type.to_s].pretty_inspect} for type #{type}"
+
+          if opencontrol_yaml_hash[type.to_s]
+            puts "Using search paths defined in opencontrol.yaml for #{type}"
+            opencontrol_yaml_hash[type.to_s].each do |pattern|
+              if type==:components and File.directory?(pattern)
+                pattern = pattern + '/component.yaml'
+              end
+              targets.push(
+                  type: type,
+                  pattern: pattern
+              )
+            end
+          else
+            puts "Using default preconfigured paths defined for #{type}"
+            default_targets_for_type(type).each do |target|
+              targets.push(target)
+            end
+          end
+        end
+      else
+        puts "Using default search paths"
+        targets = DEFAULT_SPECIFICATION[:targets]
+      end
+      {
+          action: :run,
+          targets: targets
+      }
     end
 
     def self.should_lint?(opts)
@@ -134,7 +183,10 @@ USAGE_TEXT
       add_target(:standards, opts, specification)      if opts[:standards]
       add_target(:certifications, opts, specification) if opts[:certifications]
       add_target(:opencontrols, opts, specification)   if opts[:opencontrols]
-      specification = DEFAULT_SPECIFICATION if use_default?(opts, specification)
+      if use_default?(opts, specification)
+        specification = construct_default_spec
+      end
+
       specification
     end
 
