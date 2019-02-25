@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'kwalify'
-
 module Opencontrol
   # This module holds the Opencontrol Linter version information.
   module Version
@@ -12,6 +10,7 @@ module Opencontrol
 
     def self.version(debug = false)
       if debug
+        require 'kwalify'
         format(MSG, version: STRING, parser_version: Kwalify::VERSION,
                     ruby_engine: RUBY_ENGINE, ruby_version: RUBY_VERSION,
                     ruby_platform: RUBY_PLATFORM)
