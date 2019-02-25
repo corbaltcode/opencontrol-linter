@@ -73,6 +73,54 @@ opencontrol-linter --components './components/AU_policy/component.yaml'
 
 ```
 
+## Search Paths
+
+By default the linter will search in the following paths. 
+
+These paths can all be overridden on the command line.
+```
+components:        '**/component.yaml'       (recursive search for files named component)
+standards:         './standards/*.yaml'
+certifications:    './certifications/*.yaml'
+opencontrol files: './opencontrol.yaml'
+
+```
+
+The following directory structure for compliance is typical. You can specify those that match your project.
+```
+Project Root
+.
+└── compliance
+    ├── opencontrol.yaml
+    ├── certifications
+    │   └── FredRAMP-high.yaml
+    ├── components
+    │   ├── AU_policy
+    │   │   └── component.yaml
+    │   └── AWS_core
+    │       └── component.yaml
+    └── standards
+        └── FRIST-800-53.yaml
+
+```
+
+## Development
+
+Clone this repo
+```
+git clone https://github.com/adriankierman/opencontrol-linter.git
+
+```
+Install Dependencies
+```
+bundle install
+```
+
+To run tests:
+```
+rake spec
+```
+
 ## Compatibility
 
 Open Control Linter supports the following Open Control schemas:
