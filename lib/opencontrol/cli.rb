@@ -49,26 +49,24 @@ module Opencontrol
          opencontrol-linter --components './components/AU_policy/component.yaml'
 USAGE_TEXT
 
-    DEFAULT_SPECIFICATION = {
+    CONFIG_FILENAME = './opencontrol.yaml'.freeze
+
+    PRESET = {
       action: :run,
-      targets: [
-        {
-          type: :components,
-          pattern: './components/**/component.yaml'
-        },
-        {
-          type: :standards,
-          pattern: './standards/*.yaml'
-        },
-        {
-          type: :certifications,
-          pattern: './certifications/*.yaml'
-        },
-        {
-          type: :opencontrols,
-          pattern: './opencontrol.yaml'
-        }
-      ]
+      targets: {
+        components: [
+          './components/**/component.yaml'
+        ],
+        standards: [
+          './standards/*.yaml'
+        ],
+        certifications: [
+          './certifications/*.yaml'
+        ],
+        opencontrols: [
+          './opencontrol.yaml'
+        ]
+      }
     }.freeze
 
     ALIASES = {
@@ -92,90 +90,86 @@ USAGE_TEXT
       0 # exit with no error
     end
 
-    def self.targets_for_type(type, specification)
-      specification[:targets].select { |t| t[:type] == type }
-    end
-
-    def self.default_targets_for_type(type)
-      targets_for_type(type, DEFAULT_SPECIFICATION)
-    end
-
-    def self.default_pattern_for_type(type)
-      targets_for_type(type, DEFAULT_SPECIFICATION).first[:pattern]
-    end
-
     def self.add_target(type, opts, specification)
-      if opts[type] == true
-        # use the defaults supplied
-        puts "Adding target for #{type} via constructed defaults"
-        targets_for_type(type, construct_default_spec).each do |target|
-          specification[:targets].push target
-        end
-      else
-        puts "Adding target for #{type} via preconfigured defaults"
-        if opts[type].is_a?(String)
-          specification[:targets].push(
-              type: type,
-              pattern: opts[type]
-          )
-        end
+      if use_default_pattern?(opts, type)
+        specification[:targets][type] = default_spec[:targets][type]
+      elsif opts[type].is_a?(String)
+        specification[:targets][type] = [opts[type]]
       end
     end
 
-    def self.construct_default_spec
-      targets = []
-      if File.exists?('./opencontrol.yaml')
-        puts "Using search paths from './opencontrol.yaml"
-        opencontrol_yaml_hash = YAML.load_file('./opencontrol.yaml')
-        puts(opencontrol_yaml_hash)
-        [:components, :standards, :certifications].each do |type|
-          puts "Opencontrol.yaml contained #{opencontrol_yaml_hash[type.to_s].pretty_inspect} for type #{type}"
+    def self.use_default_pattern?(opts, type)
+      # this is set when the user uses a flag on the command line but doesnt
+      # add a specific file pattern - this way the user can restrict to just
+      # one type
+      opts[type] == true
+    end
 
-          if opencontrol_yaml_hash[type.to_s]
-            puts "Using search paths defined in opencontrol.yaml for #{type}"
-            opencontrol_yaml_hash[type.to_s].each do |pattern|
-              if type==:components and File.directory?(pattern)
-                pattern = pattern + '/component.yaml'
-              end
-              targets.push(
-                  type: type,
-                  pattern: pattern
-              )
-            end
-          else
-            puts "Using default preconfigured paths defined for #{type}"
-            default_targets_for_type(type).each do |target|
-              targets.push(target)
-            end
-          end
-        end
-      else
-        puts "Using default search paths"
-        targets = DEFAULT_SPECIFICATION[:targets]
-      end
-      {
-          action: :run,
-          targets: targets
+    def self.opencontrol_yaml_present?
+      File.exist?(CONFIG_FILENAME)
+    end
+
+    def self.construct_defaults(config)
+      spec = {
+        action: :run,
+        targets: {}.merge(PRESET[:targets]).merge(config[:targets])
       }
+
+      expand_components_filenames(spec)
+    end
+
+    def self.load_config_from_yaml
+      yaml_config = YAML.load_file(CONFIG_FILENAME)
+      yaml_config = Hash[yaml_config.map { |(k, v)| [k.to_sym, v] }]
+      {
+        action: :run,
+        targets: yaml_config.select do |k, _v|
+                   %i[components standards certifications].include?(k)
+                 end
+      }
+    end
+
+    def self.expand_components_filenames(spec)
+      # the config file usually omits the component files full filename
+      spec[:targets][:components] = spec[:targets][:components].collect do |f|
+        f += '/component.yaml' if File.directory?(f)
+        f
+      end
+      spec
+    end
+
+    def self.default_spec
+      if opencontrol_yaml_present?
+        construct_defaults(load_config_from_yaml)
+      else
+        PRESET
+      end
     end
 
     def self.should_lint?(opts)
       !(opts[:version] || opts[:help])
     end
 
-    def self.all_targets_selected?(opts, specification)
-      opts[:all] || specification[:targets].empty?
+    def self.all_targets_empty?(specification)
+      specification[:targets][:components].empty? &&
+        specification[:targets][:standards].empty? &&
+        specification[:targets][:certifications].empty? &&
+        specification[:targets][:opencontrols].empty?
+    end
+
+    def self.all_selected?(opts, specification)
+      opts[:all] || all_targets_empty?(specification)
     end
 
     def self.use_default?(opts, specification)
-      all_targets_selected?(opts, specification) && should_lint?(opts)
+      all_selected?(opts, specification) && should_lint?(opts)
     end
 
     def self.parse_args(arguments)
       opts = Rationalist.parse(arguments, alias: ALIASES)
       specification = {
         action: :run,
-        targets: []
+        targets: Opencontrol::Linter.empty_targets
       }
       specification[:action] = :version                     if opts[:version]
       specification[:action] = :help                        if opts[:help]
@@ -183,10 +177,7 @@ USAGE_TEXT
       add_target(:standards, opts, specification)      if opts[:standards]
       add_target(:certifications, opts, specification) if opts[:certifications]
       add_target(:opencontrols, opts, specification)   if opts[:opencontrols]
-      if use_default?(opts, specification)
-        specification = construct_default_spec
-      end
-
+      specification = default_spec if use_default?(opts, specification)
       specification
     end
 

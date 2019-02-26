@@ -73,27 +73,42 @@ module Opencontrol
       )
     end
 
-    def self.validate_target(target)
+    def self.validate_pattern(target)
       filenames = Dir[target[:pattern]]
+      issues = []
       if filenames.empty?
         issues = [files_not_found_issue]
         show_issues(issues, target[:pattern])
         return issues
       end
-      filenames.collect do |filename|
-        issues = validate(target[:type], filename)
+      filenames.each do |filename|
+        issues += validate(target[:type], filename)
         show_issues(issues, filename)
-        issues
       end
+      issues
     end
 
     def self.validate_all(specification)
-      specification[:targets].collect do |target|
-        validate_target(target)
-      end.flatten
+      issues = []
+      specification[:targets].each do |type, patterns|
+        patterns.each do |pattern|
+          issues += validate_pattern(type: type, pattern: pattern)
+        end
+      end
+      issues
+    end
+
+    def self.empty_targets
+      {
+        components: [],
+        standards: [],
+        certifications: [],
+        opencontrols: []
+      }
     end
 
     def self.run(specification)
+      specification[:targets] = empty_targets.merge(specification[:targets])
       issues = validate_all(specification)
       if !issues.empty?
         puts "Complete. #{issues.length} issues found.".red

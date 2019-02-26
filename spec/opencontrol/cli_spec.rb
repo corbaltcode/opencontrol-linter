@@ -35,7 +35,7 @@ RSpec.describe 'Opencontrol CLI' do
         s = Opencontrol::CLI.parse_args(a)
         expect(s[:action]).to eq(:run)
         expect(s[:targets].length).to eq(4)
-        expect(s).to eq(Opencontrol::CLI::DEFAULT_SPECIFICATION)
+        expect(s[:targets]).to eq(Opencontrol::CLI::PRESET[:targets])
       end
     end
   end
@@ -45,32 +45,41 @@ RSpec.describe 'Opencontrol CLI' do
       [['--components'], ['--component'], ['-c']].each do |a|
         s = Opencontrol::CLI.parse_args(a)
         expect(s[:action]).to eq(:run)
-        expect(s[:targets].length).to eq(1)
-        expect(s[:targets][0][:type]).to eq(:components)
+        # expect(s[:targets].length).to eq(1)
+        expect(s[:targets][:components].length).to eq(1)
+        expect(s[:targets][:standards].length).to eq(0)
+        expect(s[:targets][:certifications].length).to eq(0)
+        expect(s[:targets][:opencontrols].length).to eq(0)
       end
     end
     it 'specifies the correct target when asked to just run standards' do
       [['--standards'], ['--standard'], ['-s']].each do |a|
         s = Opencontrol::CLI.parse_args(a)
         expect(s[:action]).to eq(:run)
-        expect(s[:targets].length).to eq(1)
-        expect(s[:targets][0][:type]).to eq(:standards)
+        expect(s[:targets][:components].length).to eq(0)
+        expect(s[:targets][:standards].length).to eq(1)
+        expect(s[:targets][:certifications].length).to eq(0)
+        expect(s[:targets][:opencontrols].length).to eq(0)
       end
     end
     it 'specifies the correct target when asked to run certifications' do
       [['--certifications'], ['--certification'], ['-n']].each do |a|
         s = Opencontrol::CLI.parse_args(a)
         expect(s[:action]).to eq(:run)
-        expect(s[:targets].length).to eq(1)
-        expect(s[:targets][0][:type]).to eq(:certifications)
+        expect(s[:targets][:components].length).to eq(0)
+        expect(s[:targets][:standards].length).to eq(0)
+        expect(s[:targets][:certifications].length).to eq(1)
+        expect(s[:targets][:opencontrols].length).to eq(0)
       end
     end
     it 'specifies the correct target when asked to run opencontrol files' do
       [['--opencontrols'], ['--opencontrol'], ['-o']].each do |a|
         s = Opencontrol::CLI.parse_args(a)
         expect(s[:action]).to eq(:run)
-        expect(s[:targets].length).to eq(1)
-        expect(s[:targets][0][:type]).to eq(:opencontrols)
+        expect(s[:targets][:components].length).to eq(0)
+        expect(s[:targets][:standards].length).to eq(0)
+        expect(s[:targets][:certifications].length).to eq(0)
+        expect(s[:targets][:opencontrols].length).to eq(1)
       end
     end
   end
@@ -81,9 +90,11 @@ RSpec.describe 'Opencontrol CLI' do
       [['--component', f]].each do |a|
         s = Opencontrol::CLI.parse_args(a)
         expect(s[:action]).to eq(:run)
-        expect(s[:targets].length).to eq(1)
-        expect(s[:targets][0][:type]).to eq(:components)
-        expect(s[:targets][0][:pattern]).to eq(f)
+        expect(s[:targets][:components].length).to eq(1)
+        expect(s[:targets][:standards].length).to eq(0)
+        expect(s[:targets][:certifications].length).to eq(0)
+        expect(s[:targets][:opencontrols].length).to eq(0)
+        expect(s[:targets][:components][0]).to eq(f)
       end
     end
     it 'allows a custom target file for standards' do
@@ -91,9 +102,11 @@ RSpec.describe 'Opencontrol CLI' do
       [['--standards', f]].each do |a|
         s = Opencontrol::CLI.parse_args(a)
         expect(s[:action]).to eq(:run)
-        expect(s[:targets].length).to eq(1)
-        expect(s[:targets][0][:type]).to eq(:standards)
-        expect(s[:targets][0][:pattern]).to eq(f)
+        expect(s[:targets][:components].length).to eq(0)
+        expect(s[:targets][:standards].length).to eq(1)
+        expect(s[:targets][:certifications].length).to eq(0)
+        expect(s[:targets][:opencontrols].length).to eq(0)
+        expect(s[:targets][:standards][0]).to eq(f)
       end
     end
     it 'allows a custom target file for certifications' do
@@ -101,9 +114,11 @@ RSpec.describe 'Opencontrol CLI' do
       [['--certifications', f]].each do |a|
         s = Opencontrol::CLI.parse_args(a)
         expect(s[:action]).to eq(:run)
-        expect(s[:targets].length).to eq(1)
-        expect(s[:targets][0][:type]).to eq(:certifications)
-        expect(s[:targets][0][:pattern]).to eq(f)
+        expect(s[:targets][:components].length).to eq(0)
+        expect(s[:targets][:standards].length).to eq(0)
+        expect(s[:targets][:certifications].length).to eq(1)
+        expect(s[:targets][:opencontrols].length).to eq(0)
+        expect(s[:targets][:certifications][0]).to eq(f)
       end
     end
     it 'allows a custom target file for opencontrols' do
@@ -111,10 +126,27 @@ RSpec.describe 'Opencontrol CLI' do
       [['--opencontrols', f]].each do |a|
         s = Opencontrol::CLI.parse_args(a)
         expect(s[:action]).to eq(:run)
-        expect(s[:targets].length).to eq(1)
-        expect(s[:targets][0][:type]).to eq(:opencontrols)
-        expect(s[:targets][0][:pattern]).to eq(f)
+        expect(s[:targets][:components].length).to eq(0)
+        expect(s[:targets][:standards].length).to eq(0)
+        expect(s[:targets][:certifications].length).to eq(0)
+        expect(s[:targets][:opencontrols].length).to eq(1)
+        expect(s[:targets][:opencontrols][0]).to eq(f)
       end
+    end
+  end
+
+  context 'when merging loaded configs with presets' do
+    it 'should allow loaded configs to take precedent' do
+      s = {
+        targets: {
+          components: ['a/path/name']
+        }
+      }
+      constructed = Opencontrol::CLI.construct_defaults(s)
+      expect(constructed[:targets][:components].first).to eq(s[:targets][:components].first)
+      expect(constructed[:targets][:components].length).to eq(1)
+      expect(constructed[:targets][:standards]).to eq(Opencontrol::CLI::PRESET[:targets][:standards])
+      expect(constructed[:targets][:certifications]).to eq(Opencontrol::CLI::PRESET[:targets][:certifications])
     end
   end
 
