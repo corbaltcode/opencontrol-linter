@@ -75,9 +75,11 @@ opencontrol-linter --components './components/AU_policy/component.yaml'
 
 ## Search Paths
 
-By default the linter will search in the following paths. 
+The search paths will be loaded from the opencontrol.yaml file if it is available.
 
-These paths can all be overridden on the command line.
+In the case that there is no opencontrol.yaml, by default the linter will search in the following paths. 
+
+These paths can all be overridden on the command line or in the opencontrol.yaml file.
 ```
 components:        '**/component.yaml'       (recursive search for files named component)
 standards:         './standards/*.yaml'
@@ -88,7 +90,6 @@ opencontrol files: './opencontrol.yaml'
 
 The following directory structure for compliance is typical. You can specify those that match your project.
 ```
-Project Root
 .
 └── compliance
     ├── opencontrol.yaml
