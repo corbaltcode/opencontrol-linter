@@ -15,9 +15,9 @@ module Opencontrol
     optional arguments:
       -h, --help            show this help message and exit
       -c, --components
-                            Specify component files should be checked. Defaults to
-                            true. Searches ./**/component.yaml or the search you
-                            optionally specify.
+                            Specify component files should be checked. Defaults
+                            to true. Searches ./**/component.yaml or the search
+                            you optionally specify.
       -n, --certifications
                             Specify certification (eg FISMA high)files should be
                             checked. Defaults to true. Searches
@@ -25,12 +25,14 @@ module Opencontrol
                             specify.
       -s, --standards
                             Specify standard files (eg NIST 800.53) should be
-                            checked. Defaults to true. Searches ./standards/*.yaml
-                            or the search you optionally specify.
+                            checked. Defaults to true. Searches
+                            ./standards/*.yaml or the search you optionally
+                            specify.
       -o, --opencontrols, --opencontrol
                             Specify opencontrol file or files should be
-                            checked. Defaults to true. Searches ./opencontrol.yaml
-                            or the search you optionally specify.
+                            checked. Defaults to true. Searches
+                            ./opencontrol.yaml or the search you optionally
+                            specify.
       -a, --all             Run all types of validations (this is the default).
       -v, --version         Show the version of this utility.
 

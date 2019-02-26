@@ -45,10 +45,9 @@ module Opencontrol
       end
     end
 
-    def self.schema_for_document(type, document)
+    def self.schema_file_for_document(type, document)
       version = document['schema_version'] || '1.0.0'
-      schema_file = find_schema(type, version)
-      load_schema(schema_file)
+      find_schema(type, version)
     end
 
     def self.validate(type, filename)
@@ -56,7 +55,12 @@ module Opencontrol
       # document = Kwalify::Yaml.load_file(filename)
       ## or
       document = YAML.load_file(filename)
-      schema = schema_for_document(type, document)
+      schema_filename = schema_file_for_document(type, document)
+      unless File.exist?(schema_filename)
+        return [schema_not_found_issue(filename, schema_filename)]
+      end
+
+      schema = load_schema(schema_filename)
 
       validator = Kwalify::Validator.new(schema)
       validator.validate(document)
@@ -70,6 +74,16 @@ module Opencontrol
         nil,
         nil,
         :linter_files_not_found_issue
+      )
+    end
+
+    def self.schema_not_found_issue(filename, schema_filename)
+      Kwalify::BaseError.new(
+        'No schema files found for the pattern supplied.',
+        filename,
+        schema_filename,
+        nil,
+        :schema_files_not_found_issue
       )
     end
 

@@ -144,7 +144,16 @@ RSpec.describe 'Opencontrol Linter' do
       end.to output(/Complete. 3 issues found./).to_stdout
     end
     it 'should emit a message and stop when no schema is found for the job' do
-      skip
+      specification = {
+        action: :run,
+        targets: {
+          opencontrols: ['./spec/fixtures/bad_schema_version/opencontrol.yaml']
+        }
+      }
+      expect(Opencontrol::Linter.run(specification)).to eq(1)
+      expect do
+        Opencontrol::Linter.run(specification)
+      end.to output(/No valid schema file found./).to_stdout
     end
     it 'should throw when an unknown type of schema is used in the spec' do
       skip
