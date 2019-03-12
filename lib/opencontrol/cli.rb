@@ -69,7 +69,7 @@ USAGE_TEXT
           './opencontrol.yaml'
         ]
       }
-    }.freeze
+    }
 
     ALIASES = {
       components: %w[component c],
@@ -114,7 +114,7 @@ USAGE_TEXT
     def self.construct_defaults(config)
       spec = {
         action: :run,
-        targets: {}.merge(PRESET[:targets]).merge(config[:targets])
+        targets: {}.merge(PRESET[:targets].dup).merge(config[:targets])
       }
 
       expand_components_filenames(spec)
@@ -144,7 +144,7 @@ USAGE_TEXT
       if opencontrol_yaml_present?
         construct_defaults(load_config_from_yaml)
       else
-        PRESET
+        PRESET.dup
       end
     end
 

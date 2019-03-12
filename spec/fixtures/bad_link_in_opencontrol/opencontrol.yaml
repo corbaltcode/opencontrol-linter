@@ -1,0 +1,13 @@
+schema_version: "1.0.0"
+name: transite.gateway.cms.gov
+metadata:
+  description: CMS transit gateway component using OpenControl Compliance-as-Code (Freedonia and corbalt.com opencontrol)
+  maintainers:
+    - adrian kierman (adrian@corbalt.com, adriankierman@gmail.com)
+components:
+  - ./components/AU_policyX
+  - ./components/AWS_core
+standards:
+  - ./standards/FRIST-800-53x.yaml
+certifications:
+  - ./certifications/FredRAMP-low.yaml

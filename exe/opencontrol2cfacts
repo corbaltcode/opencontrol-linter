@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "yaml"
+require "json"
+require "pp"
+require 'date'
+require 'csv'
+require 'colorize'
+
+DEFAULT_OPENCONTROLS_FILENAME = "./opencontrols/opencontrol.yaml".freeze
+CFACTS_COLUMNS = ['Control Key', 'Response']
+opencontrols_filename = DEFAULT_OPENCONTROLS_FILENAME
+cfacts_csv_filename = "./opencontrols/opencontrol.cfacts.csv".freeze
+
+puts "OpenControl conversion to CSV CFACTS format starting".green
+
+if not File.exists?(opencontrols_filename)
+  puts "Expected an opencontrol.yaml, but could not find opencontrol.yaml " +
+  "in this directory.".red
+  exit(1)
+end
+
+puts " . Reading OpenControl components:"
+control_responses = {}
+opencontrols = YAML.load_file(opencontrols_filename)
+
+opencontrols['data']['components'].each do |component|
+  puts "    . #{component['name']}"
+  component['satisfies'].each do |control|
+    key = "#{control['standard_key']} #{control['control_key']}"
+    control_responses[key] = {} unless control_responses.has_key?(key)
+    control_responses[key]['text'] = "" unless control_responses[key].has_key?('text')
+    control_responses[key]['control_key'] = control['control_key']
+    control_responses[key]['standard_key'] = control['standard_key']
+    control['narrative'].each do |narrative|
+      control_responses[key]['text'] += key + "\n"
+      control_responses[key]['text'] += narrative['text']
+      control_responses[key]['text'] += "\n"
+    end
+  end
+end
+
+puts " . Building CFACTS file:"
+CSV.open(cfacts_csv_filename, "w") do |csv|
+  csv << CFACTS_COLUMNS
+  control_responses.each do |key, control_response|
+    puts "    . #{control_response['control_key']}"
+    csv << [control_response['control_key'], control_response['text']]
+  end
+end
+
+puts "Completed (OpenControl 2 CFACTS)".green

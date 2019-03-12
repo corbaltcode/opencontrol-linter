@@ -3,7 +3,10 @@
 require 'timeout'
 require 'opencontrol'
 
+@basedir = Dir.pwd()
+
 RSpec.describe 'Opencontrol Linter' do
+
   context 'when checking a correct file' do
     it 'returns 0 for valid components file' do
       specifications = [{
@@ -153,29 +156,46 @@ RSpec.describe 'Opencontrol Linter' do
       expect(Opencontrol::Linter.run(specification)).to eq(1)
       expect do
         Opencontrol::Linter.run(specification)
-      end.to output(/No valid schema file found./).to_stdout
+      end.to output(/No valid schema file found/).to_stdout
     end
     it 'should throw when an unknown type of schema is used in the spec' do
       skip
     end
-  end
-  context 'validating opencontrol files' do
-    it 'should indicate when there are broken links in the opencontrol file' do
+    it 'should message if certification uses control or standard that is absent' do
       skip
     end
+  end
+  context 'validating opencontrol files with broken links' do
+    it 'should indicate when there are broken links in the opencontrol file' do
+      skip
+      specifications = [{
+                            action: :run,
+                            targets: {}
+                        }]
+      specifications.each do |specification|
+        Dir.chdir('./spec/fixtures/bad_link_in_opencontrol') do
+          expect(Opencontrol::Linter.run(specification)).to eq(2)
+          expect do
+            Opencontrol::Linter.run(specification)
+          end.to output(/No validation files found for the pattern/).to_stdout
+        end
+      end
+    end
+  end
+
+  context 'a valid opencontrol.yaml in the base directory' do
     it 'should take defaults from opencontrol.yaml file' do
       specifications = [{
         action: :run,
         targets: {}
       }]
       specifications.each do |specification|
-        pwd = Dir.pwd
-        Dir.chdir('./spec/fixtures/no_issues')
-        expect(Opencontrol::Linter.run(specification)).to eq(0)
-        expect do
-          Opencontrol::Linter.run(specification)
-        end.to output(/Complete. No problems found./).to_stdout
-        Dir.chdir(pwd)
+        Dir.chdir('./spec/fixtures/no_issues') do
+          expect(Opencontrol::Linter.run(specification)).to eq(0)
+          expect do
+            Opencontrol::Linter.run(specification)
+          end.to output(/Complete. No problems found./).to_stdout
+        end
       end
     end
   end
