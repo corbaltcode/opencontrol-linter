@@ -105,6 +105,26 @@ The following directory structure for compliance is typical. You can specify tho
 
 ```
 
+## Installing a commit hook 
+
+A commit hook will run the linter before checkin and prevent checkin of unlinted 
+code.
+
+```cassandraql
+# Append the pre-comit hook using a here document
+
+tee -a .git/hooks/pre-commit <<EOF
+#!/bin/sh
+# check the validity of OpenControl files
+opencontrol-linter
+EOF
+
+# Ensure the hook is executable
+
+chmod 755 .git/hooks/pre-commit
+
+```
+
 ## Development
 
 Clone this repo
