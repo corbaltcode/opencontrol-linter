@@ -3,7 +3,7 @@
 module Opencontrol
   # This module holds the Opencontrol Linter version information.
   module Version
-    STRING = '0.1.4'.freeze
+    STRING = '0.1.5'.freeze
 
     MSG = '%<version>s (using Parser %<parser_version>s, running on ' \
           '%<ruby_engine>s %<ruby_version>s %<ruby_platform>s)'.freeze

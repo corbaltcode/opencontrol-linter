@@ -42,6 +42,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('rationalist', '~> 2.0.0')
   s.add_runtime_dependency('ruby-progressbar', '~> 1.7')
   s.add_runtime_dependency('csv', '~> 3.0.4')
+  s.add_runtime_dependency('activesupport', '~> 5.2.2.1')
+  s.add_runtime_dependency('rubyXL', '~> 3.4.3')
 
   s.add_development_dependency('bundler', '>= 1.3.0', '< 3.0')
   s.add_development_dependency('pry', '~> 0.12.2')
