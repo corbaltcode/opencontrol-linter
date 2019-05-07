@@ -8,11 +8,12 @@ require 'date'
 require 'colorize'
 require 'rubyXL'
 require 'rubyXL/convenience_methods/cell'
+require 'rubyXL/convenience_methods/worksheet'
 require 'rationalist'
 
 CFACTS_WORKBOOK_INDEX = 0
-CFACTS_CONTROL_KEY_COLUMN_INDEX = 1
-CFACTS_NARRATIVE_COLUMN_INDEX = 4
+CFACTS_CONTROL_KEY_COLUMN_INDEX = 2
+CFACTS_NARRATIVE_COLUMN_INDEX = 5
 
 DEFAULT_OPENCONTROLS_FILENAME = './opencontrols/opencontrol.yaml'
 DEFAULT_CFACTS_XLSX_FILENAME = './assets/opencontrol.cfacts.xlsx'
@@ -127,12 +128,21 @@ def maybe_merge_into_row(row, row_number, control_response)
   end
 end
 
+def ensure_cells_present(worksheet, row_number)
+  if worksheet[row_number][CFACTS_NARRATIVE_COLUMN_INDEX].nil?
+    worksheet.insert_cell(row_number, CFACTS_NARRATIVE_COLUMN_INDEX, '')
+  end
+end
+
 def locate_and_merge_control(worksheet, control_response)
   puts "    . #{control_response['control_key']}"
   # we have to locate the key in the sheet - skip the titles row
   1.upto(worksheet.sheet_data.size) do |row_number|
     row = worksheet[row_number]
-    maybe_merge_into_row(row, row_number, control_response)
+    unless row.nil?
+      ensure_cells_present(worksheet, row_number)
+      maybe_merge_into_row(row, row_number, control_response)
+    end
   end
 end
 
