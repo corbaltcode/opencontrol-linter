@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   # If you need to check in files that aren't .rb files, add them here
   s.files = Dir['{lib}/**/*.rb', 'bin/*', 'LICENSE', '*.md', 'vendor/**/*']
   s.bindir = 'exe'
-  s.executables = ['opencontrol-linter', 'opencontrol2cfacts']
+  s.executables = ['opencontrol-linter']
   s.extra_rdoc_files = ['LICENSE.txt', 'README.md']
   s.homepage = 'https://github.com/adriankierman/opencontrol'
   s.licenses = ['MIT']
