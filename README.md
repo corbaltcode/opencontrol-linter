@@ -129,7 +129,7 @@ chmod 755 .git/hooks/pre-commit
 
 Clone this repo
 ```
-git clone https://github.com/adriankierman/opencontrol-linter.git
+git clone https://github.com/corbaltcode/opencontrol-linter.git
 
 ```
 Install Dependencies
