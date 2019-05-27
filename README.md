@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/huge-robot/opencontrol-linter.svg?style=svg&circle-token=7873c3440387ef3e3b04964f5c51a15f7e3f26de)](https://circleci.com/gh/huge-robot/opencontrol-linter)
+[![CircleCI](https://circleci.com/gh/corbaltcode/opencontrol-linter.svg?style=svg)](https://circleci.com/gh/corbaltcode/opencontrol-linter)
 
 
 **Open Control Linter** is a linter for the OpenControl standard of security controls. 
@@ -129,7 +129,7 @@ chmod 755 .git/hooks/pre-commit
 
 Clone this repo
 ```
-git clone https://github.com/adriankierman/opencontrol-linter.git
+git clone https://github.com/corbaltcode/opencontrol-linter.git
 
 ```
 Install Dependencies
