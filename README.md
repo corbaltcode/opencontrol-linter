@@ -5,7 +5,7 @@
 Use it to check the correctness of opencontrols components, standards and certifications quickly.
 
 To find out more about opencontrol see:
-http://opencontrol.cfapps.io/
+https://open-control.org/
 
 ## Installation
 
@@ -152,7 +152,7 @@ Open Control Linter supports the following Open Control schemas:
 
 ## Related
 
-http://opencontrol.cfapps.io/
+https://open-control.org/
 
 https://github.com/opencontrol
 
