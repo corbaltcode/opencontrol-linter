@@ -7,6 +7,23 @@ Use it to check the correctness of opencontrols components, standards and certif
 To find out more about opencontrol see:
 https://open-control.org/
 
+## Features
+
+Linter currently checks for
+- Schema Compliance with the OpenControl schema standards
+  - Components 1.0, 2.0, 3.0, 3.1
+  - Standards 1.0
+  - Certifications 1.0
+  - Manifest (opencontrol.yaml) 1.0
+- Missing a required item in a manifest, component, standard or certification file
+- Additional items that are not allowed according to the schema you specify
+- Incorrect or misspelled items in required enumerations
+- Broken links to your components
+- Incorrectly specified schema version
+- Missing OpenControl files
+- and others
+
+
 ## Installation
 
 ```sh
